@@ -1,2 +1,2 @@
-# Hermes
-This wil be a controllable robot that delivers message around. 
+# Steering Car
+This wil be a controllable car that can steer in an incredibly cool way.
