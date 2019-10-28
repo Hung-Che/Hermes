@@ -1,2 +1,2 @@
-# Steering Car
-This wil be a controllable car that can steer in an incredibly cool way.
+# Wall-E
+This will be a super cool Wall-E robot with wheels instead of tracks. 
