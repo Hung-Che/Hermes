@@ -16,13 +16,19 @@ void setup() {
   radio.stopListening();
 }
 void loop() {
-  int joy[3] = {analogRead(A0),analogRead(A1),digitalRead(2)};
+  int x = (analogRead(A0)<=100&&analogRead(A0)>=85)?90:analogRead(A0);
+  int y = (analogRead(A1)<=100&&analogRead(A1)>=85)?90:analogRead(A1);
+  int joy[3] = {x,y,digitalRead(2)};
   radio.write(&joy, sizeof(joy));
   if(!radio.write(&joy, sizeof(joy))){
     Serial.println("Failed");
     Serial.println();  
-  }else{
-    Serial.println("Proceeded"); 
-    Serial.println(); 
+  }else{ 
+    Serial.print("X: ");
+    Serial.print(x);
+    Serial.print(" | Y: ");
+    Serial.print(y);
+    Serial.print(" | Button: ");
+    Serial.println(digitalRead(2));
   }
 }
