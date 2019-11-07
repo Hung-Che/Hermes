@@ -20,11 +20,20 @@ void setup() {
 }
 void loop() {
   if(radio.available()){
-    Serial.println(joy[1]);
     radio.read(&joy, sizeof(joy));
-    left.write(joy[0]);
-    right.write(joy[1]);
+    int x = map(joy[0],0, 1023, 0, 180);
+    int y = map(joy[0],0, 1023, 180, 0);
+    right.write(x<=100&&x>=85?90:x);
+    left.write(y<=100&&y>=85?90:y);
+    Serial.print(joy[0]);
+    Serial.print("X: ");
+    Serial.print(x);
+    Serial.print(" | Y: ");
+    Serial.println(y);
   }else{
-    Serial.println("no");
+    Serial.print("X: ");
+    Serial.print(left.read());
+    Serial.print(" | Y: ");
+    Serial.println(right.read());
   }
 }
