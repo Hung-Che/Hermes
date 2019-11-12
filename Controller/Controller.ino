@@ -20,15 +20,12 @@ void loop() {
   int y = (analogRead(A1)<=100&&analogRead(A1)>=85)?90:analogRead(A1);
   int joy[3] = {x,y,digitalRead(2)};
   radio.write(&joy, sizeof(joy));
-  if(!radio.write(&joy, sizeof(joy))){
-    Serial.println("Failed");
-    Serial.println();  
-  }else{ 
     Serial.print("X: ");
     Serial.print(x);
     Serial.print(" | Y: ");
     Serial.print(y);
     Serial.print(" | Button: ");
-    Serial.println(digitalRead(2));
-  }
+    Serial.print(digitalRead(2));
+    Serial.print(" |");
+    Serial.println(map(joy[0]-joy[1],-512,512,0,180));
 }
