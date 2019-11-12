@@ -21,19 +21,9 @@ void setup() {
 void loop() {
   if(radio.available()){
     radio.read(&joy, sizeof(joy));
-    int x = map(joy[0],0, 1023, 0, 180);
-    int y = map(joy[0],0, 1023, 180, 0);
+    int x = map(joy[0]-joy[1],-512,512,0,180);
+    int y = map(joy[0]-joy[1],-512,512,180,0);
     right.write(x<=100&&x>=85?90:x);
     left.write(y<=100&&y>=85?90:y);
-    Serial.print(joy[0]);
-    Serial.print("X: ");
-    Serial.print(x);
-    Serial.print(" | Y: ");
-    Serial.println(y);
-  }else{
-    Serial.print("X: ");
-    Serial.print(left.read());
-    Serial.print(" | Y: ");
-    Serial.println(right.read());
   }
 }
