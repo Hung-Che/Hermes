@@ -27,5 +27,7 @@ void loop() {
     Serial.print(" | Button: ");
     Serial.print(digitalRead(2));
     Serial.print(" |");
-    Serial.println(map(joy[0]-joy[1],-512,512,0,180));
+    Serial.print(map(joy[0]-joy[1],-512,512,0,180));
+    Serial.print(" \ ");
+    Serial.println(map(joy[0]+joy[1],512,1536,0,180));
 }
