@@ -9,6 +9,8 @@ Servo left;
 Servo right;
 int joy[2]={90,90};
 
+byte hf[8]= {B00111100,B01000010,B10100101,B10000001,B10100101,B10011001,B01000010,B00111100};
+
 void setup() {  
   left.attach(3);
   right.attach(10);
@@ -21,8 +23,8 @@ void setup() {
 void loop() {
   if(radio.available()){
     radio.read(&joy, sizeof(joy));
-    int x = map(joy[0]-joy[1],-512,512,0,180);
-    int y = map(joy[0]+joy[1],512,1536,180,0);
+    int x = map(joy[0]+joy[1],512,1536,0,180);
+    int y = map(joy[0]-joy[1],-512,512,180,0);
     right.write(x<=100&&x>=85?90:x);
     left.write(y<=100&&y>=85?90:y);
   }
