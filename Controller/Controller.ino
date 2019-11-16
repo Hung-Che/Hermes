@@ -16,9 +16,7 @@ void setup() {
   radio.stopListening();
 }
 void loop() {
-  int x = (analogRead(A0)<=100&&analogRead(A0)>=85)?90:analogRead(A0);
-  int y = (analogRead(A1)<=100&&analogRead(A1)>=85)?90:analogRead(A1);
-  int joy[3] = {x,y,digitalRead(2)};
+  int joy[3] = {analogRead(A0),analogRead(A1),digitalRead(2)};
   radio.write(&joy, sizeof(joy));
     Serial.print("X: ");
     Serial.print(x);
@@ -29,5 +27,5 @@ void loop() {
     Serial.print(" |");
     Serial.print(map(joy[0]-joy[1],-512,512,0,180));
     Serial.print(" \ ");
-    Serial.println(map(joy[0]+joy[1],512,1536,0,180));
+    Serial.println(map(joy[0]+joy[1],512,1536,180,0));
 }
