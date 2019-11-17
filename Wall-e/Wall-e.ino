@@ -17,7 +17,7 @@ byte up_face_norm = B00100100;
 byte up_face_blink[4] = {B00000000, B00100100, B01011010, B00000000};
 byte low_face_norm[4] = {B00000000, B01000010, B01000010, B00111100};
 byte low_face_laugh[4] = {B00000000, B01111110, B01000010, B00111100};
-byte heart_hollow[8] = {B00000000, B01100110, B10000001, B10000001, B10000001, B01000010, B00100100, B00011000};
+byte heart_hollow[8] = {B00000000, B01100110, B10011001, B10000001, B10000001, B01000010, B00100100, B00011000};
 byte heart_full[8] = {B00000000, B01100110, B11111111, B11111111, B11111111, B01111110, B00111100, B00011000};
 
 void setup() {  
@@ -25,7 +25,7 @@ void setup() {
   right.attach(3);
   Serial.begin(9600);
   lc.shutdown(0, false);
-  lc.setIntensity(0,5);
+  lc.setIntensity(0,2);
   lc.clearDisplay(0);
   radio.begin();
   radio.openReadingPipe(0, address);
@@ -34,26 +34,37 @@ void setup() {
 }
 
 void loop() {
+  upperFace();
   if(radio.available()){
     radio.read(&joy, sizeof(joy));
     int x = map(joy[0]-joy[1],-512,512,0,180);
     int y = map(joy[0]+joy[1],512,1536,180,0);
     right.write(x<=100&&x>=85?90:x);
     left.write(y<=100&&y>=85?90:y);
-    upperFace();
   }
-  
+}
+void heart(){
+  if(joy[2]==0){
+    for(int j = 0; j<8; j++){
+      lc.setColumn(0,j,heart_full[j]); 
+    }
+    tone(2,1000); 
+  }else if(joy[2]==1){
+    for(int i = 0; i<8; i++){
+      lc.setColumn(0,i,heart_hollow[i]);
+    }
+    noTone(2);
+  }  
 }
 void upperFace(){
+  for(int i = 0; i<4; i++){
+    lc.setColumn(0, i, up_face_norm);
+  }
+  lowerFace();
   if(millis()>runTime+100){
       runTime = millis();
     for(int j = 0; j<4; j++){
       lc.setColumn(0,1,up_face_blink[j]);
-    }
-    lowerFace();
-  }else{
-    for(int i = 0; i<4; i++){
-      lc.setColumn(0, i, up_face_norm);
     }
     lowerFace();
   }
