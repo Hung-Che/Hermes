@@ -11,12 +11,13 @@ const byte address[6] = "00001";
 Servo left;
 Servo right;
 int joy[3]={90,90,1};
-unsigned long runTime=0;
+unsigned long last=0;
+unsigned long blinkInterval=4000;
 
 byte up_face_norm = B00100100;
 byte up_face_blink[4] = {B00000000, B00100100, B01011010, B00000000};
 byte low_face_norm[4] = {B00000000, B01000010, B01000010, B00111100};
-byte low_face_laugh[4] = {B00000000, B01111110, B01000010, B00111100};
+byte low_face_laugh[4] = {B00000000, B01111110, B01111110, B00111100};
 byte heart_hollow[8] = {B00000000, B01100110, B10011001, B10000001, B10000001, B01000010, B00100100, B00011000};
 byte heart_full[8] = {B00000000, B01100110, B11111111, B11111111, B11111111, B01111110, B00111100, B00011000};
 
@@ -34,7 +35,21 @@ void setup() {
 }
 
 void loop() {
-  upperFace();
+  unsigned long current = millis();
+  if((unsigned long)(current - last) >= blinkInterval){
+    lc.clearDisplay(0);
+    lowerFace();
+    for(int j = 0; j<4; j++){
+      lc.setColumn(0,j,up_face_blink[j]);
+      delay(10);
+    }
+    last = millis();
+  }else{
+    for(int i = 0; i<4; i++){
+      lc.setColumn(0, i, up_face_norm);
+    }
+  lowerFace();
+  }
   if(radio.available()){
     radio.read(&joy, sizeof(joy));
     int x = map(joy[0]-joy[1],-512,512,0,180);
@@ -56,20 +71,6 @@ void heart(){
     noTone(2);
   }  
 }
-void upperFace(){
-  for(int i = 0; i<4; i++){
-    lc.setColumn(0, i, up_face_norm);
-  }
-  lowerFace();
-  if(millis()>runTime+100){
-      runTime = millis();
-    for(int j = 0; j<4; j++){
-      lc.setColumn(0,1,up_face_blink[j]);
-    }
-    lowerFace();
-  }
-}
-
 void lowerFace(){
   if(joy[2]==0){
     for(int i = 0; i<4; i++){
