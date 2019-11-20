@@ -12,6 +12,9 @@ Servo left;
 Servo right;
 int joy[3]={90,90,1};
 unsigned long last=0;
+int a=1;
+unsigned long timePress=0;
+unsigned long lastPress = 0;
 unsigned long blinkInterval=4000;
 
 byte up_face_norm = B00100100;
@@ -36,19 +39,36 @@ void setup() {
 
 void loop() {
   unsigned long current = millis();
-  if((unsigned long)(current - last) >= blinkInterval){
-    lc.clearDisplay(0);
+  if(a%3==0){
+    lc.shutdown(0,true);
+    if(joy[2]==0){
+      timePress = millis();
+      if((int)(timePress-lastPress)>=50&&(int)(timePress-lastPress)<=200){
+        a++;  
+      }
+      lastPress = timePress;
+      tone(2,10);
+    }else if(joy[2]==1){
+      noTone(2);
+    }
+  }else if(a%3==1){
+  lc.shutdown(0,false);
+    if((unsigned long)(current - last) >= blinkInterval){
+      lc.clearDisplay(0);
+      lowerFace();
+      for(int j = 0; j<4; j++){
+        lc.setColumn(0,j,up_face_blink[j]);
+        delay(10);
+      }
+      last = millis();
+    }else{
+      for(int i = 0; i<4; i++){
+        lc.setColumn(0, i, up_face_norm);
+      }
     lowerFace();
-    for(int j = 0; j<4; j++){
-      lc.setColumn(0,j,up_face_blink[j]);
-      delay(10);
     }
-    last = millis();
-  }else{
-    for(int i = 0; i<4; i++){
-      lc.setColumn(0, i, up_face_norm);
-    }
-  lowerFace();
+  }else{  
+    heart();  
   }
   if(radio.available()){
     radio.read(&joy, sizeof(joy));
@@ -60,10 +80,15 @@ void loop() {
 }
 void heart(){
   if(joy[2]==0){
+    timePress = millis();
+    if((int)(timePress-lastPress)>=50&&(int)(timePress-lastPress)<=200){
+      a++;  
+    }
+    lastPress = timePress;
     for(int j = 0; j<8; j++){
       lc.setColumn(0,j,heart_full[j]); 
     }
-    tone(2,1000); 
+    tone(2,10); 
   }else if(joy[2]==1){
     for(int i = 0; i<8; i++){
       lc.setColumn(0,i,heart_hollow[i]);
@@ -73,10 +98,15 @@ void heart(){
 }
 void lowerFace(){
   if(joy[2]==0){
+    timePress = millis();
+    if((int)(timePress-lastPress)>=50&&(int)(timePress-lastPress)<=200){
+      a++;  
+    }
+    lastPress = timePress;
     for(int i = 0; i<4; i++){
       lc.setColumn(0, 7-i, low_face_laugh[3-i]);
     }
-    tone(2,100);
+    tone(2,10);
   }else if(joy[2]==1){
     for(int j = 0; j<4; j++){
       lc.setColumn(0, 7-j, low_face_norm[3-j]);
