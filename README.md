@@ -1,2 +1,2 @@
-# Wall-E
-This will be a super cool Wall-E robot with wheels instead of tracks. 
+# Moving Cube
+This is the code for the adorable smiley hearty moving cube with terrible honking sound.
