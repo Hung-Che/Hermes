@@ -18,14 +18,7 @@ void setup() {
 void loop() {
   int joy[3] = {analogRead(A0),analogRead(A1),digitalRead(2)};
   radio.write(&joy, sizeof(joy));
-    Serial.print("X: ");
-    Serial.print(x);
-    Serial.print(" | Y: ");
-    Serial.print(y);
-    Serial.print(" | Button: ");
-    Serial.print(digitalRead(2));
-    Serial.print(" |");
-    Serial.print(map(joy[0]-joy[1],-512,512,0,180));
-    Serial.print(" \ ");
-    Serial.println(map(joy[0]+joy[1],512,1536,180,0));
+    Serial.print(abs(map(joy[0]-joy[1],-1023/2,1023/2,0,180)));
+    Serial.print("  ");
+    Serial.println(abs(map(joy[0]+joy[1],1023/2,1023*3/2,180,0)));
 }
